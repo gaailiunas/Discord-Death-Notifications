@@ -1,6 +1,5 @@
-package moe.cuteanimegirls.discorddeathnotifications;
+package moe.cuteanimegirls.deathnotificationssecure;
 
-import com.google.common.base.Strings;
 import com.google.inject.Provides;
 
 import javax.imageio.ImageIO;
@@ -20,15 +19,12 @@ import okhttp3.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static net.runelite.http.api.RuneLiteAPI.GSON;
 
 @Slf4j
 @PluginDescriptor(
-	name = "Discord Death Notifications"
+	name = "Death Notifications Secure"
 )
 public class DeathNotificationsPlugin extends Plugin
 {
@@ -86,14 +82,11 @@ public class DeathNotificationsPlugin extends Plugin
 
 	private void sendWebhook(DiscordWebhookBody discordWebhookBody)
 	{
-		getWebHookUrls().forEach(webhookUrl -> {
-			HttpUrl url = HttpUrl.parse(webhookUrl);
-			MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder()
-					.setType(MultipartBody.FORM)
-					.addFormDataPart("payload_json", GSON.toJson(discordWebhookBody));
-
-			sendWebhookWithScreenshot(url, requestBodyBuilder);
-		});
+		HttpUrl url = HttpUrl.parse(config.relay());
+		MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder()
+				.setType(MultipartBody.FORM)
+				.addFormDataPart("payload_json", GSON.toJson(discordWebhookBody));
+		sendWebhookWithScreenshot(url, requestBodyBuilder);
 	}
 
 	private void sendWebhookWithScreenshot(HttpUrl url, MultipartBody.Builder requestBodyBuilder)
@@ -122,6 +115,7 @@ public class DeathNotificationsPlugin extends Plugin
 	{
 		RequestBody requestBody = requestBodyBuilder.build();
 		Request request = new Request.Builder()
+				.header("Authorization", "Bearer " + config.token())
 				.url(url)
 				.post(requestBody)
 				.build();
@@ -151,13 +145,5 @@ public class DeathNotificationsPlugin extends Plugin
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
 		return byteArrayOutputStream.toByteArray();
-	}
-
-	private List<String> getWebHookUrls()
-	{
-		return Arrays.stream(config.webhook().split("\n"))
-				.filter(u -> u.length() > 0)
-				.map(String::trim)
-				.collect(Collectors.toList());
 	}
 }

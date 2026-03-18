@@ -1,4 +1,11 @@
 # Discord Death Notifications
+Improved version of [Discord-Death-Notifications](https://github.com/jamesdrudolph/Discord-Death-Notifications).
+
+This plugin sends death events to a relay backend instead of directly to a Discord webhook, or any webhook at all. 
+The relay requires a Bearer token and prevents exposing the webhook URL to clients.
+
+Designed to work with [HookWall](https://github.com/gaailiunas/hookwall).
+
 This is a plugin for RuneLite which sends a message to your Discord channel when you die. The message includes your username and a screenshot as proof.<br/>
 Multiple webhook urls can be entered seperated by new lines.
 

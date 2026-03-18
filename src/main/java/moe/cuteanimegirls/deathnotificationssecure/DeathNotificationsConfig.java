@@ -1,24 +1,31 @@
-package moe.cuteanimegirls.discorddeathnotifications;
+package moe.cuteanimegirls.deathnotificationssecure;
 
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 
-@ConfigGroup("discorddeathnotifications")
+@ConfigGroup("deathnotificationssecure")
 public interface DeathNotificationsConfig extends Config
 {
 	@ConfigItem(
-			keyName = "webhook",
-			name = "Webhook URL",
-			description = "The Discord Webhook URL to send messages to.",
+			keyName = "relay",
+			name = "Relay URL",
+			description = "Relay URL to send messages to",
 			position = 0
 	)
-	String webhook();
+	String relay();
+	@ConfigItem(
+			keyName = "token",
+			name = "Token",
+			description = "Token used to authorize within the relay server",
+			position = 1
+	)
+	String token();
 	@ConfigItem(
 			keyName = "deathMessage",
 			name = "Death message",
 			description = "The message that will be included with the screenshot",
-			position = 1
+			position = 2
 	)
 	default String deathMessage() {
 		return "died lmfao.";
@@ -27,7 +34,7 @@ public interface DeathNotificationsConfig extends Config
 			keyName = "includeName",
 			name = "Include player name",
 			description = "Include player name at the start of the death notification message",
-			position = 2
+			position = 3
 	)
 	default boolean includeName()
 	{
